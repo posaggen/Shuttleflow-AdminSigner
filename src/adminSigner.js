@@ -83,6 +83,7 @@ function getEthWithdrawRawTransaction(amount, toAddress, nonce, epochHeight, pri
     storageLimit: 1000,
     nonce: nonce,
     epochHeight: epochHeight,
+    chainId: 1029,
     data: tokenContract.burn(
       owner.address, // user address
       (new BigNumber(amount)).multipliedBy(1e18).toString(10), // burn amount
