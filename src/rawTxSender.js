@@ -1,34 +1,13 @@
-const superagent = require('superagent');
 const {Conflux} = require('js-conflux-sdk');
 
 const cfxUrl = "http://main.confluxrpc.org";
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 // sendRawTransaction
 // returnValue: (String) transaction hash
 async function sendRawTransaction(rawTransaction) {
-  const data = JSON.stringify({
-    jsonrpc: '2.0',
-    id: '1',
-    method: "cfx_sendRawTransaction",
-    params: [rawTransaction]
-  });
-  let finalResult, finalError;
-  try {
-    const {body: {result, error} = {}} = await superagent
-      .post(cfxUrl)
-      .send(data)
-      .timeout(this.timeout);
-    finalResult = result;
-    finalError = error;
-  } catch (e) {
-    throw Error(e);
-  }
-  if (finalError) throw new Error(JSON.stringify(finalError));
-  return finalResult;
+  const cfx = new Conflux({url: cfxUrl});
+  let hash = await cfx.sendRawTransaction(rawTransaction);
+  return hash;
 }
 
 // get transaction information

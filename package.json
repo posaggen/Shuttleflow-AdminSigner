@@ -23,7 +23,6 @@
     "bitcoinjs-lib": "5.1.6",
     "ethereumjs-wallet": "0.6.3",
     "js-conflux-sdk": "0.13.5",
-    "superagent": "5.1.0",
     "web3": "1.2.4"
   }
 }

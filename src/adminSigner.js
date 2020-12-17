@@ -71,7 +71,7 @@ function keysFromMnemonic(mnemonic) {
 
 // get eth withdraw raw transaction
 // returnValue: (String) raw transaction in hex format
-function getEthWithdrawRawTransaction(amount, toAddress, nonce, privateKey) {
+function getEthWithdrawRawTransaction(amount, toAddress, nonce, epochHeight, privateKey) {
   let keys = keysFromPrivateKey(privateKey);
   let owner = cfx.Account(keys.privateKey);
   let txParams = {
@@ -81,10 +81,12 @@ function getEthWithdrawRawTransaction(amount, toAddress, nonce, privateKey) {
     gas: "1000000", // 100w gas
     gasPrice: "100000000000", // 100 Gdrip
     storageLimit: 1000,
+    nonce: nonce,
+    epochHeight: epochHeight,
     data: tokenContract.burn(
       owner.address, // user address
-      (new BigNumber(amount)).multipiledBy(1e18).toString(10), // burn amount
-      (new BigNumber(amount)).multipiledBy(1e18).toString(10), // max burn fee
+      (new BigNumber(amount)).multipliedBy(1e18).toString(10), // burn amount
+      (new BigNumber(amount)).multipliedBy(1e18).toString(10), // max burn fee
       toAddress, // eth address
       addr0 // relayer address
     ).data,
