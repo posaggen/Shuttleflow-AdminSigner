@@ -1,0 +1,29 @@
+{
+  "name": "shuttleflow-adminsigner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/posaggen/Shuttleflow-AdminSigner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/posaggen/Shuttleflow-AdminSigner/issues"
+  },
+  "homepage": "https://github.com/posaggen/Shuttleflow-AdminSigner#readme",
+  "dependencies": {
+    "bignumber.js": "^9.0.1",
+    "bip32": "^2.0.6",
+    "bip39": "^3.0.3",
+    "bitcoinjs-lib": "5.1.6",
+    "ethereumjs-wallet": "0.6.3",
+    "js-conflux-sdk": "0.13.5",
+    "superagent": "5.1.0",
+    "web3": "1.2.4"
+  }
+}
