@@ -4,16 +4,13 @@ const bip39 = require('bip39');
 const bip32 = require('bip32');
 const hdkey = require('ethereumjs-wallet/hdkey');
 const cfx = new Conflux({});
-const fs = require('fs');
 const BigNumber = require('bignumber.js');
 const Web3 = require('web3');
 const w3 = new Web3();
 
 const network = bitcoin.networks.bitcoin;
 
-const tokenBase =  JSON.parse(
-  fs.readFileSync(__dirname + '/../build/TokenBase.json'),
-);
+const tokenBase =  require('./TokenBase.json')
 
 const tokenContract = cfx.Contract({
   abi: tokenBase.abi,

@@ -30,6 +30,7 @@ async function checkTransaction(hash) {
     status: status,
     scanUrl: `https://www.confluxscan.io/transaction/${hash}`,
   };
+  return res;
 }
 
 module.exports = {
