@@ -33,8 +33,9 @@
         <el-input  type="number"  v-model="epochNumber" aria-placeholder="老板填" class="w600"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" @click="buildWithdraw">导出RawTransaction</el-button>
+        <el-button type="primary" @click="buildWithdraw">生成RawTransaction</el-button>
         <span class="ml6">{{withdrawMessage}}</span>
+        <el-button type="primary" @click="saveWithdraw" class="ml6">保存到txt</el-button>
       </el-form-item>
       <el-form-item label="">
         <el-input type="textarea" :rows="5" v-model="rawWithdrawTx"></el-input>
@@ -50,8 +51,9 @@
         <el-input type="number" v-model="contractNonce" aria-placeholder="老板填" class="w600"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" @click="getHashUpgradeImpl">导出签名</el-button>
+        <el-button type="primary" @click="getHashUpgradeImpl">生成签名</el-button>
         <span class="ml6">{{contractSignMessage}}</span>
+        <el-button type="primary" @click="saveContractSign" class="ml6">保存到txt</el-button>
       </el-form-item>
       <el-form-item label="">
         <el-input type="text" :rows="5" v-model="contractSign" class="w600"></el-input>
@@ -64,9 +66,23 @@
 
 <script>
 import {keysFromPrivateKey,keysFromMnemonic,getEthWithdrawRawTransaction,getHashUpgradeImpl} from '@/adminSigner'
+import fileDownload from 'js-file-download'
 export default {
   name: "Signer",
   methods: {
+    saveContractSign() {
+      const data = {
+        newContractAddress: this.newContractAddress,
+        contractNonce: this.contractNonce,
+        contractSign: this.contractSign,
+        time: new Date().Format("yyyy-MM-dd hh:mm:ss"),
+      }
+      const dataStr = JSON.stringify(data, null, 4)
+      const from = this.newContractAddress.substr(2, 6)
+      const to = this.contractNonce
+      let filename = `${new Date().Format("yyyy-MM-dd_hh-mm-ss")}_Contract_${from}_Nonce_${to}.txt`;
+      fileDownload(dataStr, filename);
+    },
     getHashUpgradeImpl() {
       try {
         this.contractSign = getHashUpgradeImpl(this.newContractAddress, this.contractNonce)
@@ -74,6 +90,23 @@ export default {
       } catch (e) {
         this.contractSignMessage = `${e}`
       }
+    },
+    saveWithdraw() {
+      const data = {
+        rawWithdrawTx: this.rawWithdrawTx,
+        fromAddress: this.accountAddress,
+        withdrawAmount: this.withdrawAmount,
+        withdrawToAddress: this.withdrawToAddress,
+        nonce: this.adminNonce,
+        epochNumber: this.epochNumber,
+        token: "ETH",
+        time: new Date().Format("yyyy-MM-dd hh:mm:ss"),
+      }
+      const dataStr = JSON.stringify(data, null, 4)
+      const from = this.accountAddress.substr(2, 6)
+      const to = this.withdrawToAddress.substr(2, 6)
+      let filename = `${new Date().Format("yyyy-MM-dd_hh-mm-ss")}_${this.withdrawAmount}ETH_FROM_${from}_TO_${to}.txt`;
+      fileDownload(dataStr, filename);
     },
     buildWithdraw() {
       try {
