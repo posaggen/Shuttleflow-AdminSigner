@@ -1,6 +1,6 @@
 Shuttleflow Admin Tool使用方法：
 
-加压后点击index.html，打开联盟成员签名工具。
+解压后点击index.html，打开联盟成员签名工具。
 
 工具分为2个标签页：
 
