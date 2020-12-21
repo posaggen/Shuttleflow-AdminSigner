@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/posaggen/Shuttleflow-AdminSigner#readme",
   "dependencies": {
+    "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "element-ui": "^2.4.5",
     "js-file-download": "^0.4.12",
