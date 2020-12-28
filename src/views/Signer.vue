@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import {keysFromPrivateKey,keysFromMnemonic,getEthWithdrawRawTransaction,getHashUpgradeImpl} from '@/adminSigner'
+import {keysFromPrivateKey,keysFromMnemonic,getEthWithdrawRawTransaction,getHashUpgradeImpl,signMessageCfx} from '@/adminSigner'
 import fileDownload from 'js-file-download'
 export default {
   name: "Signer",
@@ -85,7 +85,7 @@ export default {
     },
     getHashUpgradeImpl() {
       try {
-        this.contractSign = getHashUpgradeImpl(this.newContractAddress, this.contractNonce)
+        this.contractSign = signMessageCfx(getHashUpgradeImpl(this.newContractAddress, this.contractNonce), this.privateKey)
         this.contractSignMessage = '签名成功'
       } catch (e) {
         this.contractSignMessage = `${e}`

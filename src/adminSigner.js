@@ -7,6 +7,7 @@ const cfx = new Conflux({});
 const BigNumber = require('bignumber.js');
 const Web3 = require('web3');
 const w3 = new Web3();
+const {util} = require('js-conflux-sdk');
 
 const network = bitcoin.networks.bitcoin;
 
@@ -18,6 +19,7 @@ const tokenContract = cfx.Contract({
 
 const cETH = "0x86d2fb177eff4be03a342951269096265b98ac46";
 const proxy = "0x890e3feac4a2c33d7594bc5be62e7970ef5481e0";
+//const proxy = "0x89ee646e8ec9184fde03d4a6f73ba5b198d07974";
 const addr0 = "0x0000000000000000000000000000000000000000";
 
 function getAddress(node) {
@@ -92,8 +94,8 @@ function getEthWithdrawRawTransaction(amount, toAddress, nonce, epochHeight, pri
   return owner.signTransaction(txParams).serialize();
 }
 
-// get contract upgrade signature
-// returnValue: (String) signature
+// get contract upgrade hash
+// returnValue: (String) hash
 function getHashUpgradeImpl(newImpl, adminNonce) {
   return w3.utils.soliditySha3(
     {t: 'string', v: 'upgrade'},
@@ -103,9 +105,38 @@ function getHashUpgradeImpl(newImpl, adminNonce) {
   );
 }
 
+// get upgrade signature
+// returnValue: (String) signature
+function signMessageCfx(hash, priv_key) {
+  let hash_buf = Buffer.from(hash.substring(2), 'hex');
+  let sig = util.sign.ecdsaSign(
+    hash_buf,
+    Buffer.from(priv_key.substring(2), 'hex'),
+  );
+  let hex_sig = `0x${sig.r.toString('hex')}${sig.s.toString(
+    'hex',
+  )}${Buffer.from([sig.v]).toString('hex')}`;
+  return hex_sig;
+}
+
+function recoverCFXAddress(signature, hash) {
+  let hash_buf = Buffer.from(hash.substring(2), 'hex');
+  let signature_buf = Buffer.from(signature.substring(2), 'hex');
+  let sig = {};
+  sig.r = signature_buf.slice(0, 32);
+  sig.s = signature_buf.slice(32, 64);
+  sig.v = parseInt(signature_buf.slice(64, 65).toString('hex'), 16);
+  let signer = `0x${util.sign
+    .publicKeyToAddress(util.sign.ecdsaRecover(hash_buf, sig))
+    .toString('hex')}`;
+  return signer.toLowerCase();
+}
+
 module.exports = {
   keysFromMnemonic: keysFromMnemonic,
   keysFromPrivateKey: keysFromPrivateKey,
   getEthWithdrawRawTransaction: getEthWithdrawRawTransaction,
   getHashUpgradeImpl: getHashUpgradeImpl,
+  signMessageCfx: signMessageCfx,
 };
+
