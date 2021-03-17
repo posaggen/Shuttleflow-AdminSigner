@@ -44,11 +44,8 @@
       </el-collapse-item>
       <el-collapse-item title="合约升级" name="contract">
         <el-form label-width="180px">
-      <el-form-item label="新合约地址">
-        <el-input v-model="newContractAddress" aria-placeholder="老板填" class="w600"></el-input>
-      </el-form-item>
-      <el-form-item label="合约nonce">
-        <el-input type="number" v-model="contractNonce" aria-placeholder="老板填" class="w600"></el-input>
+      <el-form-item label="待签名消息">
+        <el-input v-model="hashToSign" aria-placeholder="老板填" class="w600"></el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="getHashUpgradeImpl">生成签名</el-button>
@@ -72,20 +69,20 @@ export default {
   methods: {
     saveContractSign() {
       const data = {
-        newContractAddress: this.newContractAddress,
+        hashToSign: this.hashToSign,
         contractNonce: this.contractNonce,
         contractSign: this.contractSign,
         time: new Date().Format("yyyy-MM-dd hh:mm:ss"),
       }
       const dataStr = JSON.stringify(data, null, 4)
-      const from = this.newContractAddress.substr(2, 6)
+      const from = this.hashToSign.substr(2, 6)
       const to = this.contractNonce
       let filename = `${new Date().Format("yyyy-MM-dd_hh-mm-ss")}_Contract_${from}_Nonce_${to}.txt`;
       fileDownload(dataStr, filename);
     },
     getHashUpgradeImpl() {
       try {
-        this.contractSign = signMessageCfx(getHashUpgradeImpl(this.newContractAddress, this.contractNonce), this.privateKey)
+        this.contractSign = signMessageCfx(this.hashToSign, this.privateKey)
         this.contractSignMessage = '签名成功'
       } catch (e) {
         this.contractSignMessage = `${e}`
@@ -158,7 +155,7 @@ export default {
       epochNumber: '',
       withdrawMessage: '',
       //
-      newContractAddress: '',
+      hashToSign: '',
       contractNonce: '',
       contractSignMessage: '',
       contractSign: '',

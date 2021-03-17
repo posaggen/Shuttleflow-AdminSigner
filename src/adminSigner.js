@@ -140,3 +140,9 @@ module.exports = {
   signMessageCfx: signMessageCfx,
 };
 
+let hash = getHashUpgradeImpl("0x86ff0b16259a41da07054406049904a68839377f", 0);
+console.log(hash);
+let sig = "0xdf8bf4717e6be3697ade9fb99cdd3ad0993be7a7870cd3d93d54127485220c2821ed2f4f55a4d6b889c57ce7b2308d7df80f1f2e8927d13829039860e8b79ac200";
+//let sig = "0x828f34d420148bb7c1e436005e64e30103132ad3e38934eb972d012ccd2ecff628b1f28dec0fe985046d0ef69a4487a0bd451abbd266c835bffbfe889c11d27e01";
+//let sig = "0x49521bf79dea2d3e6ba3d7c34c2e20a78c449507aa7d5224c9460e44a994d2710cdb5565610e922e16cfa46dbc0a140456ea207b08af02e7141cc012eb4762c500";
+console.log(recoverCFXAddress(sig, hash));
