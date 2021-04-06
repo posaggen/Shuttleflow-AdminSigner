@@ -4,16 +4,19 @@
     <el-collapse v-model="activeNames">
       <el-collapse-item title="账号配置" name="account">
         <el-form label-width="180px">
-          <el-form-item label="Admin私钥">
-            <el-input v-model="privateKey" @change="loadPrivateKey" placeholder="老板填，修改后自动导入" class="w600"></el-input>
-          </el-form-item>
           <el-form-item label="">
-            <template slot="label"><span style="color: orange">或</span>Admin助记词</template>
+            <template slot="label">Admin助记词</template>
             <el-input v-model="mnemonic" @change="loadFromMnemonic" placeholder="老板填，修改后自动导入" class="w600"></el-input>
-          </el-form-item>
-          <el-form-item label="Admin地址">
-            <el-input v-model="accountAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
             <span class="ml6">{{accountMessage}}</span>
+          </el-form-item>
+          <el-form-item label="Admin Conflux地址">
+            <el-input v-model="accountCfxAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
+          </el-form-item>
+          <el-form-item label="Admin Ethereum地址">
+            <el-input v-model="accountEthAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
+          </el-form-item>
+          <el-form-item label="Admin Bitcoin地址">
+            <el-input v-model="accountBitAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
           </el-form-item>
         </el-form>
       </el-collapse-item>
@@ -42,27 +45,42 @@
       </el-form-item>
     </el-form>
       </el-collapse-item>
-      <el-collapse-item title="合约升级" name="contract">
+      <el-collapse-item title="Conflux消息签名" name="cfxSign">
         <el-form label-width="180px">
-      <el-form-item label="待签名消息">
-        <el-input v-model="hashToSign" aria-placeholder="老板填" class="w600"></el-input>
-      </el-form-item>
-      <el-form-item label="">
-        <el-button type="primary" @click="getHashUpgradeImpl">生成签名</el-button>
-        <span class="ml6">{{contractSignMessage}}</span>
-        <el-button type="primary" @click="saveContractSign" class="ml6">保存到txt</el-button>
-      </el-form-item>
-      <el-form-item label="">
-        <el-input type="text" :rows="5" v-model="contractSign" class="w600"></el-input>
-      </el-form-item>
-    </el-form>
+          <el-form-item label="待签名消息">
+            <el-input v-model="hashToSign" aria-placeholder="老板填" class="w600"></el-input>
+          </el-form-item>
+          <el-form-item label="">
+            <el-button type="primary" @click="getHashUpgradeImpl">生成Conflux签名</el-button>
+            <span class="ml6">{{contractSignMessage}}</span>
+            <el-button type="primary" @click="saveContractSign" class="ml6">保存到txt</el-button>
+          </el-form-item>
+          <el-form-item label="签名结果">
+            <el-input type="text" :rows="5" v-model="contractSign" class="w600"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-collapse-item>
+      <el-collapse-item title="Ethereum消息签名" name="ethSign">
+        <el-form label-width="180px">
+          <el-form-item label="待签名消息">
+            <el-input v-model="hashToSignEth" aria-placeholder="老板填" class="w600"></el-input>
+          </el-form-item>
+          <el-form-item label="">
+            <el-button type="primary" @click="getHashUpgradeEthImpl">生成Ethereum签名</el-button>
+            <span class="ml6">{{ethSignMessage}}</span>
+            <el-button type="primary" @click="saveEthSign" class="ml6">保存到txt</el-button>
+          </el-form-item>
+          <el-form-item label="签名结果">
+            <el-input type="text" :rows="5" v-model="ethSign" class="w600"></el-input>
+          </el-form-item>
+        </el-form>
       </el-collapse-item>
     </el-collapse>
   </div>
 </template>
 
 <script>
-import {keysFromPrivateKey,keysFromMnemonic,getEthWithdrawRawTransaction,getHashUpgradeImpl,signMessageCfx} from '@/adminSigner'
+import {keysFromMnemonic,getEthWithdrawRawTransaction,getHashUpgradeImpl,signMessageCfx,signMessageEth} from '@/adminSigner'
 import fileDownload from 'js-file-download'
 export default {
   name: "Signer",
@@ -70,22 +88,41 @@ export default {
     saveContractSign() {
       const data = {
         hashToSign: this.hashToSign,
-        contractNonce: this.contractNonce,
-        contractSign: this.contractSign,
+        signBy: this.accountCfxAddress,
+        confluxSign: this.contractSign,
         time: new Date().Format("yyyy-MM-dd hh:mm:ss"),
       }
       const dataStr = JSON.stringify(data, null, 4)
       const from = this.hashToSign.substr(2, 6)
-      const to = this.contractNonce
-      let filename = `${new Date().Format("yyyy-MM-dd_hh-mm-ss")}_Contract_${from}_Nonce_${to}.txt`;
+      let filename = `${new Date().Format("yyyy-MM-dd_hh-mm-ss")}_Conflux_${from}.txt`;
       fileDownload(dataStr, filename);
+    },
+    saveEthSign() {
+      const data = {
+        ethHashToSign: this.hashToSignEth,
+        signBy: this.accountEthAddress,
+        ethSign: this.ethSign,
+        time: new Date().Format("yyyy-MM-dd hh:mm:ss"),
+      }
+      const dataStr = JSON.stringify(data, null, 4)
+      const from = this.hashToSignEth.substr(2, 6)
+      let filename = `${new Date().Format("yyyy-MM-dd_hh-mm-ss")}_Eth_${from}.txt`;
+      fileDownload(dataStr, filename);
+    },
+    getHashUpgradeEthImpl() {
+      try {
+        this.ethSign = signMessageEth(this.hashToSignEth, this.account.ethereum.privateKey)
+        this.ethSignMessage = 'Ethereum签名成功'
+      } catch (e) {
+        this.ethSignMessage = `Ethereum签名出错：${e}`
+      }
     },
     getHashUpgradeImpl() {
       try {
-        this.contractSign = signMessageCfx(this.hashToSign, this.privateKey)
-        this.contractSignMessage = '签名成功'
+        this.contractSign = signMessageCfx(this.hashToSign, this.account.conflux.privateKey)
+        this.contractSignMessage = 'Conflux签名成功'
       } catch (e) {
-        this.contractSignMessage = `${e}`
+        this.contractSignMessage = `Conflux签名出错：${e}`
       }
     },
     saveWithdraw() {
@@ -121,31 +158,25 @@ export default {
     },
     loadFromMnemonic(){
       try {
-        const account = keysFromMnemonic(this.mnemonic)
-        this.accountAddress = account.address
-        this.privateKey = account.privateKey
+        this.account = keysFromMnemonic(this.mnemonic)
+        this.accountCfxAddress = this.account.conflux.address
+        this.accountEthAddress = this.account.ethereum.address
+        this.accountBitAddress = this.account.bitcoin.address
         this.accountMessage = '助记词导入成功'
       } catch (e) {
-        this.accountMessage = `${e}`
+        this.accountMessage = `导入出错：${e}`
       }
     },
-    loadPrivateKey(){
-      try {
-        const account = keysFromPrivateKey(this.privateKey)
-        this.accountAddress = account.address
-        this.accountMessage = '私钥导入成功'
-      } catch (e) {
-        this.accountMessage = `${e}`
-      }
-    }
   },
   data() {
     return {
       activeNames: ['account'],
       //
-      privateKey: '',
+      account: {},// multiple account
       mnemonic: '',
-      accountAddress: '',
+      accountCfxAddress: '',
+      accountEthAddress: '',
+      accountBitAddress: '',
       accountMessage: '',
       //
       rawWithdrawTx: '',
@@ -154,11 +185,15 @@ export default {
       adminNonce: '',
       epochNumber: '',
       withdrawMessage: '',
-      //
+      // conflux
       hashToSign: '',
       contractNonce: '',
       contractSignMessage: '',
-      contractSign: '',
+      contractSign: '', // conflux
+      // eth
+      hashToSignEth: '',
+      ethSignMessage: '',
+      ethSign: '',
     }
   }
 }
