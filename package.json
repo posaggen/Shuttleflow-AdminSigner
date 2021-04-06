@@ -19,16 +19,17 @@
   },
   "homepage": "https://github.com/posaggen/Shuttleflow-AdminSigner#readme",
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11",
-    "element-ui": "^2.4.5",
-    "js-file-download": "^0.4.12",
     "bignumber.js": "^9.0.1",
     "bip32": "^2.0.6",
     "bip39": "^3.0.3",
     "bitcoinjs-lib": "5.1.6",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.4.5",
+    "eth-crypto": "^1.9.0",
     "ethereumjs-wallet": "0.6.3",
     "js-conflux-sdk": "0.13.5",
+    "js-file-download": "^0.4.12",
+    "vue": "^2.6.11",
     "web3": "1.2.4"
   },
   "devDependencies": {
