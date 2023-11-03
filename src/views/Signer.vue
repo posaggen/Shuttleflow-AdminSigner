@@ -2,75 +2,53 @@
   <div>
     <div>Shuttleflow Admin Signer</div>
     <el-collapse v-model="activeNames">
-      <el-collapse-item title="账号配置" name="account">
+      <el-collapse-item title="Account" name="account">
         <el-form label-width="180px">
           <el-form-item label="">
-            <template slot="label">Admin助记词</template>
-            <el-input v-model="mnemonic" @change="loadFromMnemonic" placeholder="老板填，修改后自动导入" class="w600"></el-input>
+            <template slot="label">Admin Mnemonic</template>
+            <el-input v-model="mnemonic" @change="loadFromMnemonic" placeholder="Please fill out" class="w600"></el-input>
             <span class="ml6">{{accountMessage}}</span>
           </el-form-item>
-          <el-form-item label="Admin Conflux地址">
-            <el-input v-model="accountCfxAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
+          <el-form-item label="Admin Conflux Address">
+            <el-input v-model="accountCfxAddress" readonly placeholder="Click to display" class="w600"></el-input>
           </el-form-item>
-          <el-form-item label="Admin Ethereum地址">
-            <el-input v-model="accountEthAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
+          <el-form-item label="Admin Ethereum Address">
+            <el-input v-model="accountEthAddress" readonly placeholder="Click to display" class="w600"></el-input>
           </el-form-item>
-          <el-form-item label="Admin Bitcoin地址">
-            <el-input v-model="accountBitAddress" readonly placeholder="点我自动显示" class="w600"></el-input>
+          <el-form-item label="Admin Bitcoin Address">
+            <el-input v-model="accountBitAddress" readonly placeholder="Click to display" class="w600"></el-input>
           </el-form-item>
         </el-form>
       </el-collapse-item>
 
-      <el-collapse-item title="cETH提现" name="withdraw">
-        <el-form label-width="180px">
-      <el-form-item label="提现金额(cETH)">
-        <el-input type="number" v-model="withdrawAmount" aria-placeholder="老板填" class="w600"></el-input>
-      </el-form-item>
-      <el-form-item label="提现地址(ETH地址)">
-        <el-input v-model="withdrawToAddress" aria-placeholder="老板填" class="w600"></el-input>
-      </el-form-item>
-      <el-form-item label="Admin Nonce">
-        <el-input  type="number"  v-model="adminNonce" aria-placeholder="老板填" class="w600"></el-input>
-      </el-form-item>
-      <el-form-item label="Epoch高度">
-        <el-input  type="number"  v-model="epochNumber" aria-placeholder="老板填" class="w600"></el-input>
-      </el-form-item>
-      <el-form-item label="">
-        <el-button type="primary" @click="buildWithdraw">生成RawTransaction</el-button>
-        <span class="ml6">{{withdrawMessage}}</span>
-        <el-button type="primary" @click="saveWithdraw" class="ml6">保存到txt</el-button>
-      </el-form-item>
-      <el-form-item label="">
-        <el-input type="textarea" :rows="5" v-model="rawWithdrawTx"></el-input>
-      </el-form-item>
     </el-form>
       </el-collapse-item>
-      <el-collapse-item title="Conflux消息签名" name="cfxSign">
+      <el-collapse-item title="Conflux Message Sign" name="cfxSign">
         <el-form label-width="180px">
-          <el-form-item label="待签名消息">
-            <el-input v-model="hashToSign" aria-placeholder="老板填" class="w600"></el-input>
+          <el-form-item label="Message">
+            <el-input v-model="hashToSign" aria-placeholder="Please fill out" class="w600"></el-input>
           </el-form-item>
           <el-form-item label="">
-            <el-button type="primary" @click="getHashUpgradeImpl">生成Conflux签名</el-button>
+            <el-button type="primary" @click="getHashUpgradeImpl">Generate Conflux Signature</el-button>
             <span class="ml6">{{contractSignMessage}}</span>
-            <el-button type="primary" @click="saveContractSign" class="ml6">保存到txt</el-button>
+            <el-button type="primary" @click="saveContractSign" class="ml6">save to txt</el-button>
           </el-form-item>
-          <el-form-item label="签名结果">
+          <el-form-item label="Signature">
             <el-input type="text" :rows="5" v-model="contractSign" class="w600"></el-input>
           </el-form-item>
         </el-form>
       </el-collapse-item>
-      <el-collapse-item title="Ethereum消息签名" name="ethSign">
+      <el-collapse-item title="Ethereum Message Sign" name="ethSign">
         <el-form label-width="180px">
-          <el-form-item label="待签名消息">
-            <el-input v-model="hashToSignEth" aria-placeholder="老板填" class="w600"></el-input>
+          <el-form-item label="Message">
+            <el-input v-model="hashToSignEth" aria-placeholder="Please fill out" class="w600"></el-input>
           </el-form-item>
           <el-form-item label="">
-            <el-button type="primary" @click="getHashUpgradeEthImpl">生成Ethereum签名</el-button>
+            <el-button type="primary" @click="getHashUpgradeEthImpl">Generate Ethereum Signature</el-button>
             <span class="ml6">{{ethSignMessage}}</span>
-            <el-button type="primary" @click="saveEthSign" class="ml6">保存到txt</el-button>
+            <el-button type="primary" @click="saveEthSign" class="ml6">save to txt</el-button>
           </el-form-item>
-          <el-form-item label="签名结果">
+          <el-form-item label="Signature">
             <el-input type="text" :rows="5" v-model="ethSign" class="w600"></el-input>
           </el-form-item>
         </el-form>
@@ -112,17 +90,17 @@ export default {
     getHashUpgradeEthImpl() {
       try {
         this.ethSign = signMessageEth(this.hashToSignEth, this.account.ethereum.privateKey)
-        this.ethSignMessage = 'Ethereum签名成功'
+        this.ethSignMessage = 'Ethereum Sign Succeed.'
       } catch (e) {
-        this.ethSignMessage = `Ethereum签名出错：${e}`
+        this.ethSignMessage = `Ethereum Sign Failed：${e}`
       }
     },
     getHashUpgradeImpl() {
       try {
         this.contractSign = signMessageCfx(this.hashToSign, this.account.conflux.privateKey)
-        this.contractSignMessage = 'Conflux签名成功'
+        this.contractSignMessage = 'Conflux Sign Succeed.'
       } catch (e) {
-        this.contractSignMessage = `Conflux签名出错：${e}`
+        this.contractSignMessage = `Conflux Sign Failed：${e}`
       }
     },
     saveWithdraw() {
@@ -162,9 +140,9 @@ export default {
         this.accountCfxAddress = this.account.conflux.address
         this.accountEthAddress = this.account.ethereum.address
         this.accountBitAddress = this.account.bitcoin.address
-        this.accountMessage = '助记词导入成功'
+        this.accountMessage = 'Mnemonic imported.'
       } catch (e) {
-        this.accountMessage = `导入出错：${e}`
+        this.accountMessage = `Mnemonic import error：${e}`
       }
     },
   },

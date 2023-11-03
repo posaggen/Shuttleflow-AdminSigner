@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/posaggen/Shuttleflow-AdminSigner#readme",
   "dependencies": {
+    "@vue/compiler-sfc": "^3.3.7",
     "bignumber.js": "^9.0.1",
     "bip32": "^2.0.6",
     "bip39": "^3.0.3",
@@ -35,8 +36,8 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "vue-cli-plugin-element": "^1.0.1",
     "babel-plugin-component": "^1.1.1",
+    "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.6.11"
   },
   "extends": [
