@@ -45,6 +45,7 @@
       </el-form-item>
     </el-form>
       </el-collapse-item>
+
       <el-collapse-item title="Conflux消息签名" name="cfxSign">
         <el-form label-width="180px">
           <el-form-item label="待签名消息">
@@ -60,6 +61,7 @@
           </el-form-item>
         </el-form>
       </el-collapse-item>
+      
       <el-collapse-item title="Ethereum消息签名" name="ethSign">
         <el-form label-width="180px">
           <el-form-item label="待签名消息">

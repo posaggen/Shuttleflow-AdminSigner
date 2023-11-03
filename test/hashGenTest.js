@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { getHashColdEth, getHashUpgradeImpl, contracts } = require('./hash_gen');
+const { getHashColdEth, getHashUpgradeImpl, contracts } = require('../src/hashGen');
 const  Web3  = require('web3');
 var BN = new Web3().utils.BN;
 
@@ -27,13 +27,13 @@ describe("test hash_gen", async function () {
     const ethInWei = new BN("1000000000000000000")
     const btcInWei = new BN("100000000")
 
-    it("test cfx_chain_cfx_token to cold wallet", async function () {
+    it("test transfer cfx_chain_cfx_token of bsc-cfx pair from cold wallet", async function () {
         const amount = (new BN("40000000")).mul(ethInWei)
         const h = getHashColdEth("ColdToHot", contracts.bsc.cfx_to_eth_custodian_proxy_addr, zeroAddr, amount, 5)
         expect(h).equals("0x23019a05338eb4f591d8dfccdef7f4af2e05eb33226c61c4baa0f9cd8d63ae03")
     })
 
-    it("test eth_chain_eth_token to cold wallet", async function () {
+    it("test transfer eth_chain_eth_token of eth-cfx pair to cold wallet", async function () {
         const amount = (new BN("400")).mul(ethInWei)
         const h = getHashColdEth("ColdToHot", contracts.eth.eth_factory_proxy_addr, zeroAddr, amount, 31)
         expect(h).equals("0x2c0a8241e6528006bd2894d0574c625049ee82bec0af5fb6baaa2b059087d668")
@@ -46,7 +46,7 @@ describe("test hash_gen", async function () {
         expect(h).equals("0xc519216351e53404cbb690bff6ab850eff9ba3e052aed1104638f276caf16339")
     })
 
-    it("test upgrade contract", async function () {
+    it("test cfx chain upgrade contract", async function () {
         const factory="cfx:aceu6t9m2wvpgtnzww8f13vstf2s8zeb6a4eja1756"
         const new_impl="cfx:acakseutvbdphfwxr4fp48y0epeyx4g2mevman5ygb"
         const h = getHashUpgradeImpl(factory,new_impl,4)

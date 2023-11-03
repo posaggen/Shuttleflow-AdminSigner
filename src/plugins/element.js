@@ -24,5 +24,7 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Select)
+Vue.use(Option)
 
 Vue.prototype.$message = Message
