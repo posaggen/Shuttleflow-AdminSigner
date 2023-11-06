@@ -30,12 +30,12 @@
                         <el-button type="primary" @click="buildEvmColdHash">Gen Hash</el-button>
                     </el-form-item>
                     <el-form-item label="Hash Result">
-                        <el-input type="text" v-model="evmCold.buildHashMessage"></el-input>
+                        <el-input type="text" v-model="evmCold.buildHashMessage" class="w600"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
 
-            <el-collapse-item title="Transfer from CFX chain coer space cold wallet to hot wallet" name="cfxColdToHot">
+            <el-collapse-item title="Transfer from CFX chain core space cold wallet to hot wallet" name="cfxColdToHot">
                 <el-form label-width="180px">
                     <el-form-item label="Select Pair Chain">
                         <el-select v-model="cfxCold.selectedChain" placeholder="Select the pair chain" @change="setCfxFactoryAddress">
@@ -58,7 +58,7 @@
                         <el-button type="primary" @click="buildCfxColdHash">Gen Hash</el-button>
                     </el-form-item>
                     <el-form-item label="Hash Result">
-                        <el-input type="text" v-model="cfxCold.buildHashMessage"></el-input>
+                        <el-input type="text" v-model="cfxCold.buildHashMessage" class="w600"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
@@ -87,7 +87,7 @@
                         <el-button type="primary" @click="buildEvmUpgradeHash">Gen Hash</el-button>
                     </el-form-item>
                     <el-form-item label="Hash Result">
-                        <el-input type="text" v-model="evmUpgradeFactory.buildHashMessage"></el-input>
+                        <el-input type="text" v-model="evmUpgradeFactory.buildHashMessage" class="w600"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
@@ -113,10 +113,10 @@
                             class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-button type="primary" @click="buildCfxUpgradeHash">生成Hash</el-button>
+                        <el-button type="primary" @click="buildCfxUpgradeHash">Gen Hash</el-button>
                     </el-form-item>
                     <el-form-item label="Hash Result">
-                        <el-input type="text" v-model="cfxUpgradeFactory.buildHashMessage"></el-input>
+                        <el-input type="text" v-model="cfxUpgradeFactory.buildHashMessage" class="w600"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
