@@ -1,121 +1,121 @@
 <template>
     <div>
-        <div>Shuttleflow Hash 生成器</div>
+        <div>Shuttleflow Hash Generator</div>
         <el-collapse>
 
-            <el-collapse-item title="EVM链冷钱包转热钱包" name="evmColdToHot">
+            <el-collapse-item title="Transfer from EVM chain cold wallet to hot wallet" name="evmColdToHot">
                 <el-form label-width="180px">
-                    <el-form-item label="选择链">
-                        <el-select v-model="evmCold.selectedChain" placeholder="请选择链" @change="setEvmFactoryAddress">
+                    <el-form-item label="Select Chain">
+                        <el-select v-model="evmCold.selectedChain" placeholder="Select Chain" @change="setEvmFactoryAddress">
                             <el-option v-for="(option, index) in chains" :key="index" :label="option"
                                 :value="option"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Factory合约地址">
+                    <el-form-item label="Factory Contract Address">
                         <el-input type="string" v-model="evmCold.ethFactoryProxyAddr"
-                            placeholder="EVX链->CFX链 跨链Factory地址，选择链后自动填入" class="w600"></el-input>
+                            placeholder="EVM chain->CFX chain cross-chain factory address, auto filled on chain selected" class="w600"></el-input>
                     </el-form-item>
-                    <el-form-item label="Token合约地址">
-                        <el-input v-model="evmCold.tokenAddress" placeholder="从对应链scan上查询后填入，主链Coin填0地址"
+                    <el-form-item label="Token Contract Address">
+                        <el-input v-model="evmCold.tokenAddress" placeholder="Querying on the chain's scan, such as etherscan, zero address means chain coin"
                             class="w600"></el-input>
                     </el-form-item>
-                    <el-form-item label="金额">
-                        <el-input type="string" v-model="evmCold.amount" placeholder="单位为wei" class="w600"></el-input>
+                    <el-form-item label="Amount">
+                        <el-input type="string" v-model="evmCold.amount" placeholder="Uint in wei" class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="Nonce">
                         <el-input type="number" v-model="evmCold.coldNonce"
-                            placeholder="从合约查 hot_to_cold_nonce(token_address)" class="w600"></el-input>
+                            placeholder="Query on contract: hot_to_cold_nonce(token_address)" class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-button type="primary" @click="buildEvmColdHash">生成Hash</el-button>
+                        <el-button type="primary" @click="buildEvmColdHash">Gen Hash</el-button>
                     </el-form-item>
-                    <el-form-item label="Hash结果">
+                    <el-form-item label="Hash Result">
                         <el-input type="text" v-model="evmCold.buildHashMessage"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
 
-            <el-collapse-item title="CFX Core冷钱包转热钱包" name="cfxColdToHot">
+            <el-collapse-item title="Transfer from CFX chain coer space cold wallet to hot wallet" name="cfxColdToHot">
                 <el-form label-width="180px">
-                    <el-form-item label="选择对手链">
-                        <el-select v-model="cfxCold.selectedChain" placeholder="请选择对手链" @change="setCfxFactoryAddress">
+                    <el-form-item label="Select Pair Chain">
+                        <el-select v-model="cfxCold.selectedChain" placeholder="Select the pair chain" @change="setCfxFactoryAddress">
                             <el-option v-for="(option, index) in chains" :key="index" :label="option"
                                 :value="option"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Factory合约地址">
+                    <el-form-item label="Factory Contract Address">
                         <el-input type="string" v-model="cfxCold.cfxToEthCustodianProxyAddr"
-                            placeholder="CFX链->EVM链 跨链Factory合约地址，选择链后自动填入" class="w600"></el-input>
+                            placeholder="CFX chain->EVM chain cross-chain factory address, auto filled on chain selected" class="w600"></el-input>
                     </el-form-item>
-                    <el-form-item label="金额">
-                        <el-input type="string" v-model="cfxCold.amount" placeholder="单位为wei" class="w600"></el-input>
+                    <el-form-item label="Amount">
+                        <el-input type="string" v-model="cfxCold.amount" placeholder="Unit in wei" class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="Nonce">
                         <el-input type="number" v-model="cfxCold.coldNonce"
-                            placeholder="从合约查 hot_to_cold_nonce(token_address)" class="w600"></el-input>
+                            placeholder="Query on contract: hot_to_cold_nonce(token_address)" class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-button type="primary" @click="buildCfxColdHash">生成Hash</el-button>
+                        <el-button type="primary" @click="buildCfxColdHash">Gen Hash</el-button>
                     </el-form-item>
-                    <el-form-item label="Hash结果">
+                    <el-form-item label="Hash Result">
                         <el-input type="text" v-model="cfxCold.buildHashMessage"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
 
-            <el-collapse-item title="EVM链升级合约" name="evmUpgradeFactory">
+            <el-collapse-item title="EVM Chain Upgrade Factory Contract" name="evmUpgradeFactory">
                 <el-form label-width="180px">
-                    <el-form-item label="选择链">
-                        <el-select v-model="evmUpgradeFactory.selectedChain" placeholder="请选择链"
+                    <el-form-item label="Select Chain">
+                        <el-select v-model="evmUpgradeFactory.selectedChain" placeholder="Select Chain"
                             @change="setEvmFactoryAddressForUpgrade">
                             <el-option v-for="(option, index) in chains" :key="index" :label="option"
                                 :value="option"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Factory合约地址">
+                    <el-form-item label="Factory Contract Address">
                         <el-input type="string" v-model="evmUpgradeFactory.ethFactoryProxyAddr"
-                            placeholder="跨链Factory合约地址，选择链后自动填入" class="w600"></el-input>
+                            placeholder="Cross-chain factory address, auto filled on chain selected" class="w600"></el-input>
                     </el-form-item>
-                    <el-form-item label="实现合约地址">
-                        <el-input type="string" v-model="evmUpgradeFactory.newImplimentAddr" placeholder="新的实现合约地址" class="w600"></el-input>
+                    <el-form-item label="New Implement Contract">
+                        <el-input type="string" v-model="evmUpgradeFactory.newImplimentAddr" placeholder="New Implement Address" class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="Nonce">
-                        <el-input type="number" v-model="evmUpgradeFactory.nonce" placeholder="从合约查 admin_nonce"
+                        <el-input type="number" v-model="evmUpgradeFactory.nonce" placeholder="Query on contract: admin_nonce"
                             class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-button type="primary" @click="buildEvmUpgradeHash">生成Hash</el-button>
+                        <el-button type="primary" @click="buildEvmUpgradeHash">Gen Hash</el-button>
                     </el-form-item>
-                    <el-form-item label="Hash结果">
+                    <el-form-item label="Hash Result">
                         <el-input type="text" v-model="evmUpgradeFactory.buildHashMessage"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
 
-            <el-collapse-item title="CFX Core链升级合约" name="cfxUpgradeFactory">
+            <el-collapse-item title="CFX Core Upgrade Factory Contract" name="cfxUpgradeFactory">
                 <el-form label-width="180px">
-                    <el-form-item label="选择对手链">
-                        <el-select v-model="cfxUpgradeFactory.selectedChain" placeholder="请选择对手链"
+                    <el-form-item label="Select Pair Chain">
+                        <el-select v-model="cfxUpgradeFactory.selectedChain" placeholder="Select Pair Chain"
                             @change="setCfxFactoryAddressForUpgrade">
                             <el-option v-for="(option, index) in chains" :key="index" :label="option"
                                 :value="option"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Factory合约地址">
+                    <el-form-item label="Factory Contract Address">
                         <el-input type="string" v-model="cfxUpgradeFactory.cfxToEthCustodianProxyAddr"
-                            placeholder="跨链Factory合约地址，选择链后自动填入" class="w600"></el-input>
+                            placeholder="Cross-chain factory address, auto filled on chain selected" class="w600"></el-input>
                     </el-form-item>
-                    <el-form-item label="实现合约地址">
-                        <el-input type="string" v-model="cfxUpgradeFactory.newImplimentAddr" placeholder="新的实现合约地址" class="w600"></el-input>
+                    <el-form-item label="New Implement Contract">
+                        <el-input type="string" v-model="cfxUpgradeFactory.newImplimentAddr" placeholder="New Implement Address" class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="Nonce">
-                        <el-input type="number" v-model="cfxUpgradeFactory.nonce" placeholder="从合约查 admin_nonce"
+                        <el-input type="number" v-model="cfxUpgradeFactory.nonce" placeholder="Query on contract: admin_nonce"
                             class="w600"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <el-button type="primary" @click="buildCfxUpgradeHash">生成Hash</el-button>
                     </el-form-item>
-                    <el-form-item label="Hash结果">
+                    <el-form-item label="Hash Result">
                         <el-input type="text" v-model="cfxUpgradeFactory.buildHashMessage"></el-input>
                     </el-form-item>
                 </el-form>
@@ -140,7 +140,7 @@ export default {
                 const { ethFactoryProxyAddr, tokenAddress, amount, coldNonce } = this.evmCold
                 this.evmCold.buildHashMessage = getHashColdEth("ColdToHot", ethFactoryProxyAddr, tokenAddress, amount, coldNonce)
             } catch (e) {
-                this.evmCold.buildHashMessage = `计算错误：${e}`
+                this.evmCold.buildHashMessage = `Calculate error: ${e}`
             }
         },
 
@@ -153,7 +153,7 @@ export default {
                 const { cfxToEthCustodianProxyAddr, tokenAddress, amount, coldNonce } = this.cfxCold
                 this.cfxCold.buildHashMessage = getHashColdEth("ColdToHot", cfxToEthCustodianProxyAddr, tokenAddress, amount, coldNonce)
             } catch (e) {
-                this.cfxCold.buildHashMessage = `计算错误：${e}`
+                this.cfxCold.buildHashMessage = `Calculate error: ${e}`
             }
         },
 
@@ -165,7 +165,7 @@ export default {
                 const { ethFactoryProxyAddr, newImplimentAddr, nonce } = this.evmUpgradeFactory
                 this.evmUpgradeFactory.buildHashMessage = getHashUpgradeImpl(ethFactoryProxyAddr, newImplimentAddr, nonce)
             } catch (e) {
-                this.evmUpgradeFactory.buildHashMessage = `计算错误：${e}`
+                this.evmUpgradeFactory.buildHashMessage = `Calculate error: ${e}`
             }
         },
 
@@ -177,7 +177,7 @@ export default {
                 const { cfxToEthCustodianProxyAddr, newImplimentAddr, nonce } = this.cfxUpgradeFactory
                 this.cfxUpgradeFactory.buildHashMessage = getHashUpgradeImpl(cfxToEthCustodianProxyAddr, newImplimentAddr, nonce)
             } catch (e) {
-                this.cfxUpgradeFactory.buildHashMessage = `计算错误：${e}`
+                this.cfxUpgradeFactory.buildHashMessage = `Calculate error: ${e}`
             }
         },
     },
@@ -215,9 +215,6 @@ export default {
                 nonce: 0,
                 buildHashMessage: ''
             },
-
-
-
         }
     }
 }
