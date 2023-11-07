@@ -7,7 +7,7 @@ const cfx = new Conflux({});
 const BigNumber = require('bignumber.js');
 const Web3 = require('web3');
 const w3 = new Web3();
-const {util} = require('js-conflux-sdk');
+const { sign } = require('js-conflux-sdk');
 const EthCrypto = require('eth-crypto');
 
 const network = bitcoin.networks.bitcoin;
@@ -99,7 +99,7 @@ function getHashUpgradeImpl(newImpl, adminNonce) {
 // returnValue: (String) signature
 function signMessageCfx(hash, priv_key) {
   let hash_buf = Buffer.from(hash.substring(2), 'hex');
-  let sig = util.sign.ecdsaSign(
+  let sig = sign.ecdsaSign(
     hash_buf,
     Buffer.from(priv_key.substring(2), 'hex'),
   );
@@ -122,8 +122,8 @@ function recoverCFXAddress(signature, hash) {
   sig.r = signature_buf.slice(0, 32);
   sig.s = signature_buf.slice(32, 64);
   sig.v = parseInt(signature_buf.slice(64, 65).toString('hex'), 16);
-  let signer = `0x${util.sign
-    .publicKeyToAddress(util.sign.ecdsaRecover(hash_buf, sig))
+  let signer = `0x${sign
+    .publicKeyToAddress(sign.ecdsaRecover(hash_buf, sig))
     .toString('hex')}`;
   return signer.toLowerCase();
 }
